@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh '/home/app/podinfo version'
+                sh ' /home/app/podinfo version &  '
 
             }
 
