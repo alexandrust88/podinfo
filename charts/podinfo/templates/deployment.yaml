@@ -34,7 +34,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if (or .Values.service.hostPort .Values.tls.hostPort) }}
+          {{- if .Values.securityContext }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          {{- else if (or .Values.service.hostPort .Values.tls.hostPort) }}
           securityContext:
             allowPrivilegeEscalation: true
             capabilities:
@@ -46,6 +49,9 @@ spec:
           command:
             - ./podinfo
             - --port={{ .Values.service.httpPort | default 9898 }}
+            {{- if .Values.host }}
+            - --host={{ .Values.host }}
+            {{- end }}
             {{- if .Values.tls.enabled }}
             - --secure-port={{ .Values.tls.port }}
             {{- end }}
