@@ -1,8 +1,9 @@
 pipeline {
     agent { dockerfile true }
+    timeout{absolute(30)}
     stages {
         stage('Test') {
-            timeout{absolute(30)}
+            
             steps {
                 sh ' /home/app/podinfo version &  '
 
